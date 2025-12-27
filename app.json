@@ -4,7 +4,7 @@
     "slug": "agro-frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    
     "scheme": "agrofrontend",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
