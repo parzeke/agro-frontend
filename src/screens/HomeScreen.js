@@ -1,39 +1,40 @@
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
-import { getProducts } from "../api/api";
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import SearchBar from "../components/SearchBar";
+import Categories from "../components/Categories";
+import ProductsGrid from "../components/ProductsGrid";
+
+import { useLocalSearchParams } from "expo-router";
 
 export default function HomeScreen() {
-  const [products, setProducts] = useState([]);
+    const params = useLocalSearchParams();
+    const [selectedCategory, setSelectedCategory] = React.useState('all');
+    const [searchQuery, setSearchQuery] = React.useState('');
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const data = await getProducts();
-      setProducts(data);
-    };
+    React.useEffect(() => {
+        if (params.category) {
+            setSelectedCategory(params.category);
+        }
+    }, [params.category]);
 
-    fetchProducts();
-  }, []);
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Productos</Text>
-      <FlatList
-        data={products}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text>{item.price} Tsh</Text>
-            <Text>{item.location}</Text>
-          </View>
-        )}
-      />
-    </View>
-  );
+    return (
+        <View style={{ flex: 1, backgroundColor: "#F8F3EF", paddingHorizontal: 20 }}>
+            <SearchBar
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+            />
+            <Categories
+                selectedId={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+            />
+            <View style={{ flex: 1 }}>
+                <ProductsGrid
+                    selectedCategory={selectedCategory}
+                    searchQuery={searchQuery}
+                />
+            </View>
+        </View>
+    );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 10 },
-  card: { padding: 15, marginBottom: 10, borderWidth: 1, borderRadius: 5 }
-});
+const styles = StyleSheet.create({});
